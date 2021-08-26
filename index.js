@@ -1,10 +1,10 @@
 var V = new Pseudo3D.Math.Vector(-7, -4);
 var V2 = new Pseudo3D.Math.Vector(17, 6.5);
 var C = new Pseudo3D.Resources.Color();
-var I = new Pseudo3D.Resources.ImageContainer();
+var I = new Pseudo3D.Resources.ImageContainer("penis", [255, 34, 23]);
 var SS = new Pseudo3D.Resources.SpriteSheet();
 var CAM = new Pseudo3D.Camera({x: undefined, y: undefined});
-// var E = new Pseudo3D.Entity();
+var E = new Pseudo3D.Entity();
 var R = new Pseudo3D.Ray();
 var REN = new Pseudo3D.Renderer();
 var SC = new Pseudo3D.Scene();
