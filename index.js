@@ -99,11 +99,11 @@ scene.gameObjects = {
 
 var r = new Pseudo3D.Ray(17.3, 15.4, 3, -4);
 var canvas = document.createElement("canvas");
-canvas.width = 600;
-canvas.height = 400;
-// canvas.style = "width: 900px; height: 600px;";
-document.body.appendChild(canvas);
+canvas.width = 500;
+canvas.height = 333;
+// canvas.style = "width: 750; height: 500px;";
 var ctx = canvas.getContext("2d");
+document.body.appendChild(canvas);
 sky.html.onload = () => {
 	scene.skybox.texture = sky;
 };
@@ -131,7 +131,7 @@ var camera = new Pseudo3D.Camera({
 	type: Pseudo3D.RenderTypes.RAY,
 	farClippingPlane: 12,
 	nearClippingPlane: 0,
-	planeLength: 1,
+	planeLength: 0.75,
 	x: 10,
 	y: 12,
 });
