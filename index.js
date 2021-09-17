@@ -1,9 +1,11 @@
+"use strict";
 var blueStone = new Pseudo3D.Color([20, 20, 150]);
-var barrel = new Pseudo3D.SpriteSheet("/pics/eagle.png", [65, 26, 6, 100], 32, 32);
 var bluestone = new Pseudo3D.Texture("/pics/bluestone.png", blueStone);
 var colorstone = new Pseudo3D.Texture("/pics/colorstone.png", [100, 100, 100]);
-var eagle = new Pseudo3D.Texture("/pics/eagle.png", [168, 0, 0]);
-var sky = new Pseudo3D.Texture("/pics/skybox2.png", [109, 229, 242]);
+var eagle = new Pseudo3D.Texture("/pics/eagle.png", [168, 0, 0], 64, 64);
+var sky = new Pseudo3D.Texture("/pics/skybox2.png", [109, 210, 255]);
+var barrel = new Pseudo3D.Texture("/pics/barrel.png", [65, 26, 6], 64, 64);
+
 // barrel.source.html.onload = test;
 console.log(barrel);
 console.log(bluestone);
@@ -39,7 +41,7 @@ var scene = {
 		allowClipping: true
 	},
 	ceiling: {
-		provided: false,
+		provided: true,
 		texture: colorstone.isLoaded ? colorstone.pixels : colorstone.tempColor,
 		allowClipping: true
 	},
@@ -88,6 +90,13 @@ scene.cellPrefabs = {
 	},
 };
 
+scene.gameObjects = {
+	list: [
+		new Pseudo3D.Sprite(barrel, [10.5, 12]),
+	],
+	resolution: [64, 64]
+};
+
 var r = new Pseudo3D.Ray(17.3, 15.4, 3, -4);
 var canvas = document.createElement("canvas");
 canvas.width = 600;
@@ -107,7 +116,9 @@ colorstone.html.onload = () => {
 };
 eagle.html.onload = () => {
 	scene.cellPrefabs[3].texture = eagle;
+	// scene.gameObjects[0].texture = eagle;
 };
+
 var renderer = {
 	aspectRatio: canvas.width / canvas.height,
 	renderWidth: canvas.width,
@@ -127,7 +138,7 @@ var camera = new Pseudo3D.Camera({
 
 var stop = false;
 var frameCount = 0;
-var fps = 35,
+var fps = 45,
 	fpsInterval, startTime, now, then, elapsed, frameCount = 0;
 
 
@@ -164,8 +175,6 @@ function animate() {
 		// specified fpsInterval not being a multiple of RAF's interval (16.7ms)
 		then = now - (elapsed % fpsInterval);
 
-		renderer.depthBuffer = Array(canvas.width).fill().map(() => Array(canvas.height).fill(Infinity));
-
 		if (keysDown["a"]) {
 			camera.rotate(270 / fps);
 		}
@@ -179,16 +188,7 @@ function animate() {
 			camera.position.subtract(camera.direction.clone().scale(4 / fps));
 		}
 
-		// camera.position.y += 0.03
-		camera.computeAngle();
-		ctx.fillRect(0, 0, renderer.renderWidth, renderer.renderHeight);
-		camera.renderSkyBox(scene, renderer);
-		renderer.pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-		// camera.rotate(30 / fps);
-		camera.renderFloorCeiling(scene, renderer);
-		camera.renderWalls(scene, renderer);
-		var imageData = new ImageData(renderer.pixels, canvas.width)
-		ctx.putImageData(imageData, 0, 0);
+		camera.renderScene(scene, renderer);
 	}
 }
 var keysDown = {};
