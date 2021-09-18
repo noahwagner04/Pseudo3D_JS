@@ -36,14 +36,12 @@ async function test() {
 
 var scene = {
 	floor: {
-		provided: true,
-		texture: bluestone.isLoaded ? bluestone.pixels : bluestone.tempColor,
-		allowClipping: true
+		render: true,
+		texture: bluestone.isLoaded ? bluestone.pixels : bluestone.tempColor
 	},
 	ceiling: {
-		provided: true,
-		texture: colorstone.isLoaded ? colorstone.pixels : colorstone.tempColor,
-		allowClipping: true
+		render: true,
+		texture: colorstone.isLoaded ? colorstone.pixels : colorstone.tempColor
 	},
 	skybox: {
 		texture: sky.isLoaded ? sky.pixels : sky.tempColor,
@@ -97,13 +95,6 @@ scene.gameObjects = {
 	resolution: [64, 64]
 };
 
-var r = new Pseudo3D.Ray(17.3, 15.4, 3, -4);
-var canvas = document.createElement("canvas");
-canvas.width = 500;
-canvas.height = 333;
-// canvas.style = "width: 750; height: 500px;";
-var ctx = canvas.getContext("2d");
-document.body.appendChild(canvas);
 sky.html.onload = () => {
 	scene.skybox.texture = sky;
 };
@@ -119,14 +110,8 @@ eagle.html.onload = () => {
 	// scene.gameObjects[0].texture = eagle;
 };
 
-var renderer = {
-	aspectRatio: canvas.width / canvas.height,
-	renderWidth: canvas.width,
-	renderHeight: canvas.height,
-	pixels: ctx.getImageData(0, 0, canvas.width, canvas.height).data,
-	depthBuffer: Array(canvas.width).fill().map(() => Array(canvas.height).fill(Infinity)),
-	drawingContext: ctx
-};
+var renderer = new Pseudo3D.Renderer(900, 600, 0.6);
+document.body.appendChild(renderer.canvas);
 var camera = new Pseudo3D.Camera({
 	type: Pseudo3D.RenderTypes.RAY,
 	farClippingPlane: 12,
@@ -138,7 +123,7 @@ var camera = new Pseudo3D.Camera({
 
 var stop = false;
 var frameCount = 0;
-var fps = 45,
+var fps = 50,
 	fpsInterval, startTime, now, then, elapsed, frameCount = 0;
 
 
@@ -150,6 +135,7 @@ function startAnimating() {
 	startTime = then;
 	animate();
 }
+var q = 0;
 
 function animate() {
 	if (stop) {
@@ -187,8 +173,17 @@ function animate() {
 		if (keysDown["s"]) {
 			camera.position.subtract(camera.direction.clone().scale(4 / fps));
 		}
-
-		camera.renderScene(scene, renderer);
+		if (keysDown["h"]) {
+			q += 0.01;
+			q = Pseudo3D.Math.constrain(q, 0, 1);
+			renderer.resize(900, 600, q)
+		}
+		if (keysDown["l"]) {
+			q -= 0.01;
+			q = Pseudo3D.Math.constrain(q, 0, 1);
+			renderer.resize(900, 600, q)
+		}
+		renderer.render(scene, camera);
 	}
 }
 var keysDown = {};
