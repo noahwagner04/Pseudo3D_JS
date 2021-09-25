@@ -1,117 +1,7 @@
-"use strict";
-var blueStone = new Pseudo3D.Color([20, 20, 150]);
-var bluestone = new Pseudo3D.Texture("/pics/bluestone.png", blueStone);
-var colorstone = new Pseudo3D.Texture("/pics/colorstone.png", [100, 100, 100]);
-var eagle = new Pseudo3D.Texture("/pics/eagle.png", [168, 0, 0], 64, 64);
-var sky = new Pseudo3D.Texture("/pics/skybox2.png", [109, 210, 255]);
-var barrel = new Pseudo3D.Texture("/pics/barrel.png", [65, 26, 6], 64, 64);
-
-// barrel.source.html.onload = test;
-console.log(barrel);
-console.log(bluestone);
-console.log(colorstone);
-console.log(eagle);
-var sprite = new Pseudo3D.Sprite(blueStone);
-console.log(sprite.visible);
-console.log(sprite.texture)
-
-async function test() {
-	var c = document.createElement("canvas");
-	var ctx = c.getContext("2d");
-	document.body.appendChild(c);
-	var x = 0;
-	var y = 0;
-	for (var i = 0; i < barrel.textures.length; i++) {
-		await new Promise(r => setTimeout(r, 100));
-		var texture = barrel.textures[i];
-		var imageData = new ImageData(texture.pixels, barrel.cellWidth);
-		if (y >= barrel.source.height) {
-			y = 0;
-			x += barrel.cellWidth;
-		}
-		ctx.putImageData(imageData, x, y);
-		y += barrel.cellHeight;
-	}
-}
-
-var scene = {
-	floor: {
-		render: true,
-		texture: bluestone.isLoaded ? bluestone.pixels : bluestone.tempColor
-	},
-	ceiling: {
-		render: true,
-		texture: colorstone.isLoaded ? colorstone.pixels : colorstone.tempColor
-	},
-	skybox: {
-		texture: sky.isLoaded ? sky.pixels : sky.tempColor,
-		repeatAfterAngle: 180,
-	},
-	lighting: {
-		sideLight: 0.4
-	}
-};
-
-scene.worldMap = [
-	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-	[1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
-	[1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, undefined, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-	[1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0],
-	[1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
-	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-	[1, 0, 0, 0, 0, 0, 1, 1, 7, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1],
-	[1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-	[1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-	[1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 3, 3, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-	[1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 3, 3, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
-	[1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-	[1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-	[1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1],
-	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-	[1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
-	[1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1],
-	[1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
-	[1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1],
-	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-];
-
-scene.cellPrefabs = {
-	1: {
-		texture: colorstone.isLoaded ? colorstone : colorstone.tempColor
-	},
-	3: {
-		texture: eagle.isLoaded ? eagle : eagle.tempColor
-	},
-};
-
-scene.gameObjects = {
-	list: [
-		new Pseudo3D.Sprite(barrel, [10.5, 12]),
-	],
-	resolution: [64, 64]
-};
-
-sky.html.onload = () => {
-	scene.skybox.texture = sky;
-};
-bluestone.html.onload = () => {
-	scene.floor.texture = bluestone;
-};
-colorstone.html.onload = () => {
-	scene.ceiling.texture = colorstone;
-	scene.cellPrefabs[1].texture = colorstone;
-};
-eagle.html.onload = () => {
-	scene.cellPrefabs[3].texture = eagle;
-	// scene.gameObjects[0].texture = eagle;
-};
-
-var renderer = new Pseudo3D.Renderer(900, 600, 0.6);
+var scene = new Pseudo3D.Scene(config);
+var renderer = new Pseudo3D.Renderer(900, 600, 0.666);
 document.body.appendChild(renderer.canvas);
+renderer.canvas.style.border = "8px solid rgb(210, 210, 210)";
 var camera = new Pseudo3D.Camera({
 	type: Pseudo3D.RenderTypes.RAY,
 	farClippingPlane: 12,
@@ -123,10 +13,15 @@ var camera = new Pseudo3D.Camera({
 
 var stop = false;
 var frameCount = 0;
-var fps = 50,
-	fpsInterval, startTime, now, then, elapsed, frameCount = 0;
+var fps = 60, // can only be a factor of 60 when below 30, and when above 30 can only be 60 - fps factor of 60 to work.
+	fpsInterval, startTime, now, then, elapsed, frameCount = 0, skipFrames, frameRate = 0, f = 0, fc = 0;
+// list of valid values for fps are: 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 40, 45, 48, 50, 54, 55, 56, 57, 58, 59, 60
 
-
+if(fps > 30) {
+	skipFrames = 60 / (60 - fps);
+} else if(fps <= 30){
+	skipFrames = 60 / fps;
+}
 // initialize the timer variables and start the animation
 
 function startAnimating() {
@@ -153,14 +48,11 @@ function animate() {
 	elapsed = now - then;
 
 	// if enough time has elapsed, draw the next frame
-
-	if (elapsed > fpsInterval) {
+	if ((fps >= 30 && frameCount % skipFrames !== 0) || (fps < 30 && frameCount % skipFrames === 0)) {
 		// if(frameCount === 0) stop = true
-		frameCount++;
 		// Get ready for next frame by setting then=now, but also adjust for your
 		// specified fpsInterval not being a multiple of RAF's interval (16.7ms)
 		then = now - (elapsed % fpsInterval);
-
 		if (keysDown["a"]) {
 			camera.rotate(270 / fps);
 		}
@@ -173,6 +65,7 @@ function animate() {
 		if (keysDown["s"]) {
 			camera.position.subtract(camera.direction.clone().scale(4 / fps));
 		}
+
 		if (keysDown["h"]) {
 			q += 0.01;
 			q = Pseudo3D.Math.constrain(q, 0, 1);
@@ -183,9 +76,23 @@ function animate() {
 			q = Pseudo3D.Math.constrain(q, 0, 1);
 			renderer.resize(900, 600, q)
 		}
-		renderer.render(scene, camera);
+		// if (frameRate() < 37) {
+		// 	console.log("low frameRate");
+		// } 
+		// else {
+			renderer.drawingContext.fillRect(0, 0, 900, 600);
+			renderer.render(scene, camera);
+		// }
+		fc++;
 	}
+	frameCount++;
 }
+
+setInterval(() => {
+	console.log(fc - f);
+	f = fc;
+}, 1000);
+
 var keysDown = {};
 window.addEventListener("keydown", (e) => {
 	keysDown[e.key] = "a";
