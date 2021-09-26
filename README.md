@@ -16,3 +16,4 @@ A work in progress 2.5D render engine written in javascript.
 - ambient lighting
 - camera lighting
 - more complex lighting with lightsources that can creat shadows
+- webgl compatibility

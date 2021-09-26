@@ -1,5 +1,5 @@
-var blueStone = new Pseudo3D.Color([20, 20, 150]);
-var bluestone = new Pseudo3D.Texture("/pics/bluestone.png", blueStone);
+var blueStoneColor = new Pseudo3D.Color([20, 20, 150]);
+var bluestone = new Pseudo3D.Texture("/pics/bluestone.png", blueStoneColor);
 var colorstone = new Pseudo3D.Texture("/pics/colorstone.png", [100, 100, 100]);
 var eagle = new Pseudo3D.Texture("/pics/eagle.png", [168, 0, 0], 64, 64);
 var sky = new Pseudo3D.Texture("/pics/skybox2.png", [109, 210, 255]);
@@ -15,7 +15,13 @@ var config = {
 		repeatAfterAngle: 180,
 	},
 	lighting: {
-		sideLight: 0.6
+		sideLight: 0.6,
+		cameraLight: {
+			intensity: 1,
+			maxBrightness: 1.6,
+			colorBias: [1.3, 1.075, 0],
+			ambient: 0.1
+		},
 	}
 };
 
