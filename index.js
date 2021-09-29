@@ -90,7 +90,6 @@ function animate() {
 		renderer.drawingContext.fillRect(0, 0, 900, 600);
 		renderer.render(scene, camera);
 		// }
-		camera.position.z = 0.03 * Math.sin(frameCount / 6) + 0.5;
 		fc++;
 	}
 	frameCount++;
