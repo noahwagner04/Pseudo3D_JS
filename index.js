@@ -14,6 +14,12 @@ var camera = new Pseudo3D.Camera({
 		farClippingPlane: 7,
 		partialAlpha: false
 	},
+	light: {
+		intensity: 1,
+		maxBrightness: 1.6,
+		colorBias: [1.3, 1.075, 0],
+		ambient: 0.1
+	},
 });
 
 renderer.canvas.requestPointerLock = renderer.canvas.requestPointerLock ||
@@ -72,6 +78,11 @@ function animate() {
 		if (keysDown["s"]) {
 			camera.position.subtract(camera.direction.clone().scale(4 / fps));
 		}
+		if(keysDown["ctrl"]) {
+			camera.setPlaneLength(0.1);
+		} else {
+			camera.setPlaneLength(0.75);
+		}
 
 		if (keysDown["h"]) {
 			q += 0.01;
@@ -87,6 +98,7 @@ function animate() {
 		// 	console.log("low frameRate");
 		// } 
 		// else {
+		renderer.drawingContext.fillStyle = "red"
 		renderer.drawingContext.fillRect(0, 0, 900, 600);
 		renderer.render(scene, camera);
 		// }
@@ -95,10 +107,12 @@ function animate() {
 	frameCount++;
 }
 
-// setInterval(() => {
-// 	console.log(fc - f);
-// 	f = fc;
-// }, 1000);
+setInterval(() => {
+	frameRate = fc - f;
+	console.log(frameRate);
+	f = fc;
+
+}, 1000)
 
 var keysDown = {};
 window.addEventListener("keydown", (e) => {
